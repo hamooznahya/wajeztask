@@ -4,8 +4,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.wajeztask.data.datasource.RemoteDataSource
+import com.example.wajeztask.data.dto.ElixirsResponse
 import com.example.wajeztask.dispatcher.IDispatchers
 import com.example.wajeztask.domain.mappers.WizardsMapper
+import com.example.wajeztask.domain.model.Elixirs
 import com.example.wajeztask.domain.model.Wizards
 import com.example.wajeztask.domain.repository.WizardsRepository
 import com.example.wajeztask.utils.ResponseState
@@ -35,11 +37,23 @@ class WizardsRepositoryImpl @Inject constructor(
             }
         }.flowOn(workerDispatcher)
     }
+
     override fun getWizardsDetails(id: String): Flow<ResponseState<Wizards>> {
         return flow {
             emit(ResponseState.Loading)
             remoteDataSource.getWizardsDetails(id).onSuccess {
                 emit(ResponseState.Success(mapper.map(it)))
+            }.onFailure {
+                emit(ResponseState.Failure(it.mapToError()))
+            }
+        }.flowOn(workerDispatcher)
+    }
+
+    override fun getElixirsDetails(id: String): Flow<ResponseState<Elixirs>> {
+        return flow {
+            emit(ResponseState.Loading)
+            remoteDataSource.getElixirsDetails(id).onSuccess {
+                emit(ResponseState.Success(mapper.mapElixirs(it)))
             }.onFailure {
                 emit(ResponseState.Failure(it.mapToError()))
             }

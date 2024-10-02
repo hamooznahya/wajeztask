@@ -24,7 +24,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private val viewModel by viewModels<HomeViewModel>()
-
+    companion object{
+        const val WIZARD_ID="wizardId"
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,8 +42,10 @@ class HomeFragment : Fragment() {
                                 is HomePageEvents.OpenWizardDetailPage -> {
                                     findNavController().navigate(
                                         R.id.action_global_wizardDetailsFragment,
-                                        Bundle().apply { putString("orderId", it.orderID) })
+                                        Bundle().apply { putString(WIZARD_ID, it.wizardId) })
                                 }
+
+                                else -> {}
                             }
                         }
                                 WizardListScreen(viewModel,viewModel::onAction)

@@ -19,13 +19,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.wajeztask.domain.model.Elixir
+import com.example.wajeztask.domain.model.ElixirList
 import com.example.wajeztask.domain.model.Wizards
-import com.example.wajeztask.presentation.home.homefragment.WizardItem
+import com.example.wajeztask.presentation.home.DetailsPageEvents
+import com.example.wajeztask.presentation.home.HomePageEvents
 import com.example.wajeztask.utils.ResponseState
 
 @Composable
-fun WizardDetailScreen (viewModel: WizardDetailsModel) {
+fun WizardDetailScreen (viewModel: WizardDetailsModel, actions: (DetailsPageEvents) -> Unit) {
     val wizardsState by viewModel.listResult.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -39,7 +40,8 @@ fun WizardDetailScreen (viewModel: WizardDetailsModel) {
 
         is ResponseState.Success -> {
             val wizards = (wizardsState as ResponseState.Success<Wizards>).item
-            WizardDetailsItem(wizards){
+            WizardDetailsItem(wizards){ elixirsId->
+                actions(DetailsPageEvents.OpenElixirsDetailPage(elixirsId))
 
             }
         }
@@ -50,7 +52,7 @@ fun WizardDetailScreen (viewModel: WizardDetailsModel) {
 }
 
 @Composable
-fun WizardDetailsItem(wizard: Wizards, onClick: () -> Unit) {
+fun WizardDetailsItem(wizard: Wizards, onClick: (String) -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "first Name: ${wizard.firstName}", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
@@ -61,6 +63,8 @@ fun WizardDetailsItem(wizard: Wizards, onClick: () -> Unit) {
         LazyColumn {
             items(items=wizard.elixirs) { elixirs ->
                 ElixirsItem(elixirs) {
+                    onClick.invoke(elixirs.id.orEmpty())
+
                 }
             }
         }
@@ -68,7 +72,7 @@ fun WizardDetailsItem(wizard: Wizards, onClick: () -> Unit) {
 }
 
 @Composable
-fun ElixirsItem(elixir: Elixir, onClick: () -> Unit) {
+fun ElixirsItem(elixir: ElixirList, onClick: () -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier

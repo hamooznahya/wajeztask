@@ -11,10 +11,10 @@ data class WizardsResponse(
     @SerializedName("lastName")
     val lastName: String,
     @SerializedName("elixirs")
-    val elixirs: List<ElixirResponse>
+    val elixirs: List<ElixirResponseList>
 )
 
-data class ElixirResponse(
+data class ElixirResponseList(
     @SerializedName("id")
     val id: String,
     @SerializedName("name")

@@ -1,5 +1,6 @@
 package com.example.wajeztask.data
 
+import com.example.wajeztask.data.dto.ElixirsResponse
 import com.example.wajeztask.data.dto.WizardsResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -22,6 +23,11 @@ interface APIEndpoints {
     suspend fun getWizardsDetails(
         @Path("id") id: String,
     ): WizardsResponse
+
+    @GET("/Elixirs/{id}")
+    suspend fun getElixirsDetails(
+        @Path("id") id: String,
+    ): ElixirsResponse
 
 
 }

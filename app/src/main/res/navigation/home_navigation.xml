@@ -7,22 +7,31 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.wajeztask.presentation.home.homefragment.HomeFragment"
-        android:label="LoginFragment"
- />
+        android:label="LoginFragment" />
 
     <fragment
         android:id="@+id/WizardDetailsFragment"
         android:name="com.example.wajeztask.presentation.home.wizardsdetails.WizardDetailsFragment"
-        android:label="WizardDetailsFragment"
-  >
+        android:label="WizardDetailsFragment">
         <argument
             android:name="wizardId"
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <fragment
+        android:id="@+id/ElixirsDetailsFragment"
+        android:name="com.example.wajeztask.presentation.home.elixirs.ElixirsDetailsFragment"
+        android:label="WizardDetailsFragment">
+        <argument
+            android:name="elixirsId"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <action
         android:id="@+id/action_global_wizardDetailsFragment"
-        app:destination="@id/WizardDetailsFragment"
-/>
+        app:destination="@id/WizardDetailsFragment" />
+    <action
+        android:id="@+id/action_global_elixirsDetailsFragment"
+        app:destination="@id/ElixirsDetailsFragment" />
 
 </navigation>

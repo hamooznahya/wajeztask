@@ -1,4 +1,4 @@
-package com.example.wajeztask.presentation.home.wizardsdetails
+package com.example.wajeztask.presentation.home.elixirs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,22 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.wajeztask.R
-import com.example.wajeztask.presentation.home.DetailsPageEvents
 import com.example.wajeztask.presentation.home.HomePageEvents
-import com.example.wajeztask.presentation.home.homefragment.WizardListScreen
-import com.example.wajeztask.utils.observeAsEvent
+import com.example.wajeztask.presentation.home.wizardsdetails.WizardDetailScreen
+import com.example.wajeztask.presentation.home.wizardsdetails.WizardDetailsModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
-
 @AndroidEntryPoint
-class WizardDetailsFragment : Fragment() {
+class ElixirsDetailsFragment : Fragment() {
 
-    private val viewModel by viewModels<WizardDetailsModel>()
+    private val viewModel by viewModels<ElixirsDetailsModel>()
 
-    companion object{
-        const val ELIXIRS_ID="elixirsId"
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,17 +34,7 @@ class WizardDetailsFragment : Fragment() {
             setContent {
                 MaterialTheme {
                     Surface(modifier = Modifier.fillMaxSize()) {
-                        viewModel.events.observeAsEvent {
-                            when (it) {
-                                is DetailsPageEvents.OpenElixirsDetailPage -> {
-                                    findNavController().navigate(
-                                        R.id.action_global_elixirsDetailsFragment,
-                                        Bundle().apply { putString(ELIXIRS_ID, it.elixirsId) })
-                                }
-                            }
-                        }
-
-                        WizardDetailScreen(viewModel,viewModel::onAction)
+                        ElixirsDetailScreen(viewModel)
                     }
                 }
             }

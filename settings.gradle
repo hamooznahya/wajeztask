@@ -1,0 +1,27 @@
+// settings.gradle
+pluginManagement {
+    repositories {
+        google {
+            content {
+                // This restricts the repositories to only include plugins from these groups
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral() // Adding Maven Central for additional dependencies
+        gradlePluginPortal() // Adding the Gradle Plugin Portal for other plugins
+    }
+}
+
+dependencyResolutionManagement {
+    // Fail if any project tries to define its own repositories
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google() // Specify the Google repository for libraries
+        mavenCentral() // Specify Maven Central for libraries
+    }
+}
+
+rootProject.name = "wajeztask" // Set the root project name
+include ':app' // Include the app module (or other modules if any)

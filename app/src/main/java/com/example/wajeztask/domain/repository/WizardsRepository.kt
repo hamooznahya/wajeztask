@@ -9,5 +9,6 @@ import kotlinx.coroutines.flow.Flow
 interface WizardsRepository {
 
     fun getWizardsList(firstName: String,lastName: String) : Flow<ResponseState<List<Wizards>>>
+    fun getWizardsDetails(id: String) : Flow<ResponseState<Wizards>>
 
 }

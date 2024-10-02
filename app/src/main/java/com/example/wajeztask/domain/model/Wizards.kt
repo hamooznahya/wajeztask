@@ -2,13 +2,13 @@ package com.example.wajeztask.domain.model
 
 
 data class Wizards(
-    val id: String,
-    val firstName: String,
-    val lastName: String,
+    val id: String?=null,
+    val firstName: String?=null,
+    val lastName: String?=null,
     val elixirs: List<Elixir>
 )
 
 data class Elixir(
-    val id: String,
-    val name: String
+    val id: String?=null,
+    val name: String?=null
 )

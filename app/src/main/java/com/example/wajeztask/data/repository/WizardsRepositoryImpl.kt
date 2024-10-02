@@ -35,5 +35,15 @@ class WizardsRepositoryImpl @Inject constructor(
             }
         }.flowOn(workerDispatcher)
     }
+    override fun getWizardsDetails(id: String): Flow<ResponseState<Wizards>> {
+        return flow {
+            emit(ResponseState.Loading)
+            remoteDataSource.getWizardsDetails(id).onSuccess {
+                emit(ResponseState.Success(mapper.map(it)))
+            }.onFailure {
+                emit(ResponseState.Failure(it.mapToError()))
+            }
+        }.flowOn(workerDispatcher)
+    }
 
 }

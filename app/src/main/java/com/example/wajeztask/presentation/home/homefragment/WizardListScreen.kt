@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.wajeztask.domain.model.Wizards
+import com.example.wajeztask.presentation.home.HomePageEvents
 import com.example.wajeztask.utils.ResponseState
 
 @Composable
-fun WizardListScreen( viewModel: HomeViewModel) {
+fun WizardListScreen( viewModel: HomeViewModel,
+                      actions: (HomePageEvents) -> Unit) {
     val wizardsState by viewModel.listResult.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -30,6 +32,7 @@ fun WizardListScreen( viewModel: HomeViewModel) {
             LazyColumn {
                 items(items=wizards) { wizard ->
                     WizardItem(wizard) {
+                        actions(HomePageEvents.OpenWizardDetailPage(wizard.id.orEmpty()))
 
                     }
                 }
@@ -37,7 +40,7 @@ fun WizardListScreen( viewModel: HomeViewModel) {
         }
 
         is ResponseState.Failure -> {
-         //   Text(text = "Error: ${(wizardsState as ResponseState.Error).message}")
+            Text(text = " ${(wizardsState as ResponseState.Failure).error.errorMessage}")
         }
     }
 }
@@ -51,9 +54,9 @@ fun WizardItem(wizard: Wizards, onClick: () -> Unit) {
             .clickable(onClick = onClick)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = wizard.firstName, style = MaterialTheme.typography.bodyLarge)
-            Text(text = wizard.lastName, style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Age: ${wizard.id}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "first Name: ${wizard.firstName.orEmpty()}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "last Name: ${wizard.lastName.orEmpty()}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "id: ${wizard.id.orEmpty()}", style = MaterialTheme.typography.bodySmall)
         }
     }
 }

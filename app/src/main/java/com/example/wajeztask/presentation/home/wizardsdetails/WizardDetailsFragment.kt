@@ -1,4 +1,4 @@
-package com.example.wajeztask.presentation.home.homefragment
+package com.example.wajeztask.presentation.home.wizardsdetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,18 +12,15 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import com.example.wajeztask.R
-import com.example.wajeztask.presentation.home.HomePageEvents
-import com.example.wajeztask.utils.observeAsEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class WizardDetailsFragment : Fragment() {
 
-    private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel by viewModels<WizardDetailsModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,17 +31,7 @@ class HomeFragment : Fragment() {
             setContent {
                 MaterialTheme {
                     Surface(modifier = Modifier.fillMaxSize()) {
-
-                        viewModel.events.observeAsEvent {
-                            when (it) {
-                                is HomePageEvents.OpenWizardDetailPage -> {
-                                    findNavController().navigate(
-                                        R.id.action_global_wizardDetailsFragment,
-                                        Bundle().apply { putString("orderId", it.orderID) })
-                                }
-                            }
-                        }
-                                WizardListScreen(viewModel,viewModel::onAction)
+                        WizardDetailScreen(viewModel)
                     }
                 }
             }

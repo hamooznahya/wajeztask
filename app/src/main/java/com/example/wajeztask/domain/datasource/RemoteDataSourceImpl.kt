@@ -17,4 +17,11 @@ class RemoteDataSourceImpl @Inject constructor(
             apiEndpoints.getWizardsList(firstName, lastName)
         }
     }
+    override suspend fun getWizardsDetails(
+        id: String
+    ): Result<WizardsResponse> {
+        return runCatching {
+            apiEndpoints.getWizardsDetails(id)
+        }
+    }
 }

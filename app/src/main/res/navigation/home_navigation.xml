@@ -2,14 +2,27 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    app:startDestination="@id/loginFragment">
+    android:id="@+id/home_navigation.xml"
+    app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.sellotion.store.presentation.login.login.LoginFragment"
+        android:id="@+id/homeFragment"
+        android:name="com.example.wajeztask.presentation.home.homefragment.HomeFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login">
+ />
 
+    <fragment
+        android:id="@+id/WizardDetailsFragment"
+        android:name="com.example.wajeztask.presentation.home.wizardsdetails.WizardDetailsFragment"
+        android:label="WizardDetailsFragment"
+  >
+        <argument
+            android:name="wizardId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
+    <action
+        android:id="@+id/action_global_wizardDetailsFragment"
+        app:destination="@id/WizardDetailsFragment"
+/>
 
 </navigation>

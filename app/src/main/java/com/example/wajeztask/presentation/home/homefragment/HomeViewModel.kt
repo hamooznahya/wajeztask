@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wajeztask.domain.model.Wizards
 import com.example.wajeztask.domain.usecase.GetWizardsListUseCase
+import com.example.wajeztask.presentation.home.HomePageEvents
 import com.example.wajeztask.utils.ResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +22,7 @@ class HomeViewModel
     : ViewModel() {
 
 
-    private val _events = MutableSharedFlow<Events>()
+    private val _events = MutableSharedFlow<HomePageEvents>()
     val events = _events.asSharedFlow()
 
 
@@ -38,14 +39,21 @@ class HomeViewModel
     }
 
 
-    private fun sendEvent(events: Events) {
+    fun onAction(intent: HomePageEvents) {
+        when (intent) {
+            is HomePageEvents.OpenWizardDetailPage -> handleOpenOrderDetails(intent)
+        }
+    }
+    private fun handleOpenOrderDetails(intent: HomePageEvents.OpenWizardDetailPage) {
+        sendEvent(intent)
+    }
+
+    private fun sendEvent(events: HomePageEvents) {
         viewModelScope.launch {
             _events.emit(events)
         }
     }
 
 
-    sealed class Events {
-        object OpenHomePage : Events()
-    }
+
 }

@@ -14,4 +14,7 @@ class GetWizardsListUseCase @Inject constructor(
     fun execute(firstName: String, lastName: String): Flow<ResponseState<List<Wizards>>> {
         return userRepository.getWizardsList(firstName, lastName)
     }
+    fun execute3(): Flow<List<Wizards>> {
+        return userRepository.getAllDataFromCache()
+    }
 }

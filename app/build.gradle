@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compiler.processing)
+    id 'kotlin-kapt'
 
 }
 
@@ -84,7 +85,11 @@ dependencies {
     //Image Loading
     implementation(libs.coil.compose)
 
-
+    //Room
+    def room_version = "2.4.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt  "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
     //retrofit2
     implementation "com.google.code.gson:gson:2.8.9"
     implementation "com.squareup.retrofit2:retrofit:2.9.0"

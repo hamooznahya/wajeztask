@@ -1,6 +1,8 @@
 package com.example.wajeztask.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.room.Room
 import com.example.wajeztask.constant.Constants
 import com.example.wajeztask.data.APIEndpoints
 import com.example.wajeztask.data.datasource.OfflineDataSource
@@ -9,10 +11,12 @@ import com.example.wajeztask.data.network.ResponseHandlerInterceptor
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.example.wajeztask.domain.datasource.OfflineDataSourceImpl
 import com.example.wajeztask.domain.datasource.RemoteDataSourceImpl
 import com.example.wajeztask.dispatcher.DispatchersImpl
 import com.example.wajeztask.dispatcher.IDispatchers
+import com.example.wajeztask.domain.datasource.OfflineDataSourceImpl
+import com.example.wajeztask.room.WizardsDao
+import com.example.wajeztask.room.WizardsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,10 +44,25 @@ class AppModule {
     @Provides
     @Singleton
     fun provideDataStore(
-        @ApplicationContext appContext: Context,
+        wizardsDao: WizardsDao,
     ): OfflineDataSource {
-        return OfflineDataSourceImpl()
+        return OfflineDataSourceImpl(wizardsDao)
     }
+
+    @Singleton
+    @Provides
+    fun provideDatabase(
+        @ApplicationContext app: Context
+    ): WizardsDatabase {
+        return Room.databaseBuilder(
+            app,
+            WizardsDatabase::class.java,
+            "wizards_database"
+        ).build()
+    }
+    @Singleton
+    @Provides
+    fun provideItemDetailsDao(db: WizardsDatabase) = db.wizardsDao()
 
     @Provides
     fun RemoteDataSource(apiEndpoints: APIEndpoints): RemoteDataSource =

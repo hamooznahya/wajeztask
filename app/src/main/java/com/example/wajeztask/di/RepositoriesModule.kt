@@ -1,6 +1,7 @@
 package com.example.wajeztask.di
 
 
+import com.example.wajeztask.data.datasource.OfflineDataSource
 import com.example.wajeztask.data.datasource.RemoteDataSource
 import com.example.wajeztask.data.repository.WizardsRepositoryImpl
 import com.example.wajeztask.dispatcher.IDispatchers
@@ -24,12 +25,14 @@ class RepositoriesModule {
     @Singleton
     fun WizardsRepository(
         remoteDataSource: RemoteDataSource,
+        offlineDataSource: OfflineDataSource,
         dispatcher: IDispatchers,
     ): WizardsRepository =
         WizardsRepositoryImpl(
             remoteDataSource,
             dispatcher,
             WizardsMapper,
+            offlineDataSource
         )
 
 

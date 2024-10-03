@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.findNavController
 import com.example.wajeztask.R
 import com.example.wajeztask.presentation.home.HomePageEvents
@@ -32,8 +33,11 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
             setContent {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
+
+                val state = viewModel.uiState.collectAsStateWithLifecycle()
+
                 MaterialTheme {
                     Surface(modifier = Modifier.fillMaxSize()) {
 
@@ -44,14 +48,18 @@ class HomeFragment : Fragment() {
                                         R.id.action_global_wizardDetailsFragment,
                                         Bundle().apply { putString(WIZARD_ID, it.wizardId) })
                                 }
-
-                                else -> {}
                             }
                         }
-                                WizardListScreen(viewModel,viewModel::onAction)
+
+
+                            WizardListScreen(viewModel, viewModel::onAction,state.value)
+
+
+
                     }
                 }
             }
         }
     }
+
 }

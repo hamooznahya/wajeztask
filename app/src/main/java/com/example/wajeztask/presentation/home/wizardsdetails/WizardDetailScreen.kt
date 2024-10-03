@@ -1,11 +1,13 @@
 package com.example.wajeztask.presentation.home.wizardsdetails
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -35,8 +37,14 @@ fun WizardDetailScreen (viewModel: WizardDetailsModel, actions: (DetailsPageEven
 
     when (wizardsState) {
         is ResponseState.Loading -> {
-            CircularProgressIndicator(modifier = Modifier.fillMaxSize())
-        }
+            Box(
+                contentAlignment = androidx.compose.ui.Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(48.dp)
+                )
+            }        }
 
         is ResponseState.Success -> {
             val wizards = (wizardsState as ResponseState.Success<Wizards>).item

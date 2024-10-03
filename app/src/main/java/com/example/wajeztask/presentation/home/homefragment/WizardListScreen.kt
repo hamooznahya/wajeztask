@@ -8,39 +8,59 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.wajeztask.domain.model.Wizards
 import com.example.wajeztask.presentation.home.HomePageEvents
 import com.example.wajeztask.utils.ResponseState
 
 @Composable
-fun WizardListScreen( viewModel: HomeViewModel,
-                      actions: (HomePageEvents) -> Unit) {
+fun WizardListScreen(
+    viewModel: HomeViewModel,
+    actions: (HomePageEvents) -> Unit,
+    state: HomeScreenState,
+) {
     val wizardsState by viewModel.listResult.collectAsState()
+    val savedItemsState by viewModel.savedItems.collectAsState(initial = emptyList())
 
-    LaunchedEffect(Unit) {
-        viewModel.getWizardsList("", "")
+    if (state.online) viewModel.getWizardsList("", "") else viewModel.getCacheList()
+
+    when {
+        state.online && wizardsState is ResponseState.Loading -> {
+            LoadingIndicator()
+        }
+        state.online && wizardsState is ResponseState.Success -> {
+            WizardList((wizardsState as ResponseState.Success<List<Wizards>>).item, actions)
+        }
+        state.online && wizardsState is ResponseState.Failure -> {
+            ErrorMessage((wizardsState as ResponseState.Failure).error.errorMessage)
+        }
+        else -> {
+            WizardList(savedItemsState, actions)
+        }
     }
+}
 
-    when (wizardsState) {
-        is ResponseState.Loading -> {
-            CircularProgressIndicator(modifier = Modifier.fillMaxSize())
-        }
+@Composable
+fun LoadingIndicator() {
+    Box(
+        contentAlignment = androidx.compose.ui.Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(modifier = Modifier.size(48.dp))
+    }
+}
 
-        is ResponseState.Success -> {
-            val wizards = (wizardsState as ResponseState.Success<List<Wizards>>).item
-            LazyColumn {
-                items(items=wizards) { wizard ->
-                    WizardItem(wizard) {
-                        actions(HomePageEvents.OpenWizardDetailPage(wizard.id.orEmpty()))
+@Composable
+fun ErrorMessage(message: String) {
+    Text(text = message)
+}
 
-                    }
-                }
+@Composable
+fun WizardList(wizards: List<Wizards>, actions: (HomePageEvents) -> Unit) {
+    LazyColumn {
+        items(items = wizards) { wizard ->
+            WizardItem(wizard) {
+                actions(HomePageEvents.OpenWizardDetailPage(wizard.id.orEmpty()))
             }
-        }
-
-        is ResponseState.Failure -> {
-            Text(text = " ${(wizardsState as ResponseState.Failure).error.errorMessage}")
         }
     }
 }

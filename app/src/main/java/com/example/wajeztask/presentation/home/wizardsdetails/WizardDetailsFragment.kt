@@ -15,8 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.wajeztask.R
 import com.example.wajeztask.presentation.home.DetailsPageEvents
-import com.example.wajeztask.presentation.home.HomePageEvents
-import com.example.wajeztask.presentation.home.homefragment.WizardListScreen
 import com.example.wajeztask.utils.observeAsEvent
 import dagger.hilt.android.AndroidEntryPoint
 

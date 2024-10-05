@@ -12,11 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import com.example.wajeztask.R
-import com.example.wajeztask.presentation.home.HomePageEvents
-import com.example.wajeztask.presentation.home.wizardsdetails.WizardDetailScreen
-import com.example.wajeztask.presentation.home.wizardsdetails.WizardDetailsModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -33,8 +29,10 @@ class ElixirsDetailsFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
             setContent {
                 MaterialTheme {
+                    val state = viewModel.uiState.collectAsStateWithLifecycle()
+
                     Surface(modifier = Modifier.fillMaxSize()) {
-                        ElixirsDetailScreen(viewModel)
+                        ElixirsDetailScreen(state.value)
                     }
                 }
             }

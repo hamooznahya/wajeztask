@@ -2,21 +2,19 @@ package com.example.wajeztask.domain.datasource
 
 
 import com.example.wajeztask.data.datasource.OfflineDataSource
-import com.example.wajeztask.domain.model.Wizards
+import com.example.wajeztask.data.entities.WizardsEntity
 import com.example.wajeztask.room.WizardsDao
-import com.example.wajeztask.utils.ResponseState
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 
-class OfflineDataSourceImpl(
+class OfflineDataSourceImpl constructor(
     private val wizardsDao: WizardsDao
 ) : OfflineDataSource {
-    override suspend fun insertAll(list: List<Wizards>)  {
+    override suspend fun insertAll(list: List<WizardsEntity>)  {
         wizardsDao.insertAll(list)
     }
 
-    override  fun getAllWizards():  Flow<List<Wizards> >{
+    override  fun getAllWizards():  Flow<List<WizardsEntity> >{
      return   wizardsDao.getAllWizards()
     }
 

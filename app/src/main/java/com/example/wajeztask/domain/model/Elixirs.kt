@@ -1,7 +1,5 @@
 package com.example.wajeztask.domain.model
 
-import com.google.gson.annotations.SerializedName
-
 
 data class Elixirs(
     val id: String?=null,
@@ -15,13 +13,4 @@ data class Elixirs(
     val inventors: List<Inventor>,
     val manufacturer: String?=null
 )
-data class Ingredient(
-    val id: String?=null,
-    val name: String?=null
-)
 
-data class Inventor(
-    val id: String?=null,
-    val firstName: String?=null,
-    val lastName: String?=null
-)

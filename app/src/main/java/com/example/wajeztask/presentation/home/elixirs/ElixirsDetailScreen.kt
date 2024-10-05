@@ -24,34 +24,22 @@ import androidx.compose.ui.unit.dp
 import com.example.wajeztask.domain.model.Elixirs
 import com.example.wajeztask.domain.model.Ingredient
 import com.example.wajeztask.domain.model.Inventor
+import com.example.wajeztask.presentation.home.homefragment.ErrorMessage
+import com.example.wajeztask.presentation.home.homefragment.LoadingIndicator
+import com.example.wajeztask.presentation.home.wizardsdetails.DetailsPageEvents
 import com.example.wajeztask.utils.ResponseState
 
 @Composable
-fun ElixirsDetailScreen (viewModel: ElixirsDetailsModel) {
-    val wizardsState by viewModel.listResult.collectAsState()
+fun ElixirsDetailScreen (state: ElixirsDetailsScreenState) {
 
-    LaunchedEffect(Unit) {
-        viewModel.getWizardsDetails()
+    if(state.elixirs!=null){
+        WizardDetailsItem(state.elixirs)
     }
-
-    when (wizardsState) {
-        is ResponseState.Loading -> {
-            Box(
-                contentAlignment = androidx.compose.ui.Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(48.dp)
-                )
-            }        }
-
-        is ResponseState.Success -> {
-            val wizards = (wizardsState as ResponseState.Success<Elixirs>).item
-            WizardDetailsItem(wizards)
-        }
-        is ResponseState.Failure -> {
-            Text(text = " ${(wizardsState as ResponseState.Failure).error.errorMessage}")
-        }
+    if(state.isLoading){
+        LoadingIndicator()
+    }
+    if (state.errorMsg!=null){
+        ErrorMessage(state.errorMsg)
     }
 }
 

@@ -22,45 +22,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.wajeztask.domain.model.ElixirList
-import com.example.wajeztask.domain.model.Wizards
-import com.example.wajeztask.presentation.home.DetailsPageEvents
-import com.example.wajeztask.presentation.home.HomePageEvents
+import com.example.wajeztask.domain.model.Wizard
+import com.example.wajeztask.presentation.home.homefragment.ErrorMessage
+import com.example.wajeztask.presentation.home.homefragment.LoadingIndicator
+import com.example.wajeztask.presentation.home.homefragment.WizardList
 import com.example.wajeztask.utils.ResponseState
 
 @Composable
-fun WizardDetailScreen (viewModel: WizardDetailsModel, actions: (DetailsPageEvents) -> Unit) {
-    val wizardsState by viewModel.listResult.collectAsState()
+fun WizardDetailScreen (actions: (DetailsPageEvents) -> Unit, state: WizardDetailsScreenState) {
 
-    LaunchedEffect(Unit) {
-        viewModel.getWizardsDetails()
+
+    if(state.wizard!=null){
+        WizardDetailsItem(state.wizard){ elixirsId->
+            actions(DetailsPageEvents.OpenElixirsDetailPage(elixirsId))
+        }
     }
-
-    when (wizardsState) {
-        is ResponseState.Loading -> {
-            Box(
-                contentAlignment = androidx.compose.ui.Alignment.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(48.dp)
-                )
-            }        }
-
-        is ResponseState.Success -> {
-            val wizards = (wizardsState as ResponseState.Success<Wizards>).item
-            WizardDetailsItem(wizards){ elixirsId->
-                actions(DetailsPageEvents.OpenElixirsDetailPage(elixirsId))
-
-            }
-        }
-        is ResponseState.Failure -> {
-            Text(text = " ${(wizardsState as ResponseState.Failure).error.errorMessage}")
-        }
+    if(state.isLoading){
+        LoadingIndicator()
+    }
+    if (state.errorMsg!=null){
+        ErrorMessage(state.errorMsg)
     }
 }
 
 @Composable
-fun WizardDetailsItem(wizard: Wizards, onClick: (String) -> Unit) {
+fun WizardDetailsItem(wizard: Wizard, onClick: (String) -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "first Name: ${wizard.firstName}", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))

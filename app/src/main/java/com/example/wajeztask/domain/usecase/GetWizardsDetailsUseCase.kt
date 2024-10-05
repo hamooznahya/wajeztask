@@ -1,6 +1,7 @@
 package com.example.wajeztask.domain.usecase
 
-import com.example.wajeztask.domain.model.Wizards
+import com.example.wajeztask.data.entities.WizardsEntity
+import com.example.wajeztask.domain.model.Wizard
 import com.example.wajeztask.domain.repository.WizardsRepository
 import com.example.wajeztask.utils.ResponseState
 
@@ -11,7 +12,7 @@ class GetWizardsDetailsUseCase @Inject constructor(
     private val userRepository: WizardsRepository
 ) {
 
-    fun execute(id: String): Flow<ResponseState<Wizards>> {
+    fun execute(id: String): Flow<ResponseState<Wizard>> {
         return userRepository.getWizardsDetails(id)
     }
 }

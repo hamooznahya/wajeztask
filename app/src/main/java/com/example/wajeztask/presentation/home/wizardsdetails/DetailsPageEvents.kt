@@ -1,4 +1,4 @@
-package com.example.wajeztask.presentation.home
+package com.example.wajeztask.presentation.home.wizardsdetails
 
 
 sealed interface  DetailsPageEvents {

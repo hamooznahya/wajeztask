@@ -12,9 +12,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.findNavController
 import com.example.wajeztask.R
-import com.example.wajeztask.presentation.home.DetailsPageEvents
 import com.example.wajeztask.utils.observeAsEvent
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,6 +36,8 @@ class WizardDetailsFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
             setContent {
                 MaterialTheme {
+                    val state = viewModel.uiState.collectAsStateWithLifecycle()
+
                     Surface(modifier = Modifier.fillMaxSize()) {
                         viewModel.events.observeAsEvent {
                             when (it) {
@@ -47,7 +49,7 @@ class WizardDetailsFragment : Fragment() {
                             }
                         }
 
-                        WizardDetailScreen(viewModel,viewModel::onAction)
+                        WizardDetailScreen(viewModel::onAction,state.value)
                     }
                 }
             }

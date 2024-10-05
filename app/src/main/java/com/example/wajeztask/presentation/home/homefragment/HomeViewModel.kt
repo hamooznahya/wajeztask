@@ -1,14 +1,11 @@
 package com.example.wajeztask.presentation.home.homefragment
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wajeztask.data.network.NetworkLiveData
-import com.example.wajeztask.domain.model.Wizards
+import com.example.wajeztask.domain.model.Wizard
 import com.example.wajeztask.domain.usecase.GetWizardsListUseCase
-import com.example.wajeztask.presentation.home.HomePageEvents
 import com.example.wajeztask.utils.ResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,10 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel
-@Inject constructor(private val useCase: GetWizardsListUseCase,
-                    application: Application
-)
-    : ViewModel() {
+@Inject constructor(
+    private val useCase: GetWizardsListUseCase,
+    application: Application
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeScreenState())
     val uiState = _uiState.asStateFlow()
@@ -35,42 +32,53 @@ class HomeViewModel
     private val _events = MutableSharedFlow<HomePageEvents>()
     val events = _events.asSharedFlow()
 
-    private val _savedItemsLiveData = MutableSharedFlow<List<Wizards>>()
-    val savedItems: SharedFlow<List<Wizards>> = _savedItemsLiveData.asSharedFlow()
-
-    private val _listResult = MutableStateFlow<ResponseState<List<Wizards>>>(ResponseState.Loading)
-    val listResult: StateFlow<ResponseState<List<Wizards>>> = _listResult.asStateFlow()
-
-    private val _networkState = MutableStateFlow<Boolean>(false)
     private val networkLiveData: NetworkLiveData = NetworkLiveData(application)
 
-    val networkState: StateFlow<Boolean> get() = networkLiveData.networkState
+
     init {
+        getWizardsList("", "")
         observeNetworkState()
     }
+
     private fun observeNetworkState() {
         viewModelScope.launch {
             networkLiveData.networkState.collect { isConnected ->
-                    _uiState.update { state ->
-                        state.copy(online = isConnected)
-                    }
+                if (isConnected)
+                    getWizardsList("", "")
             }
         }
     }
+
     fun getWizardsList(firstName: String, secondName: String) {
         viewModelScope.launch {
             useCase.execute(firstName, secondName).collectLatest {
-                _listResult.emit(it)
+                when (it) {
+                    is ResponseState.Failure -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                isLoading = false,
+                                errorMsg = it.error.errorMessage)
+                        }
+                    }
+
+                    ResponseState.Loading -> {
+                        _uiState.update { state -> state.copy(isLoading = true, errorMsg = null) }
+                    }
+
+                    is ResponseState.Success -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                isLoading = false,
+                                listOfWizard = it.item,
+                                errorMsg = null
+                            )
+                        }
+                    }
+                }
             }
         }
     }
-    fun getCacheList() {
-        viewModelScope.launch {
-            useCase.execute3().collectLatest {
-                _savedItemsLiveData.emit(it)
-            }
-        }
-    }
+
 
 
     fun onAction(intent: HomePageEvents) {
@@ -78,6 +86,7 @@ class HomeViewModel
             is HomePageEvents.OpenWizardDetailPage -> handleOpenOrderDetails(intent)
         }
     }
+
     private fun handleOpenOrderDetails(intent: HomePageEvents.OpenWizardDetailPage) {
         sendEvent(intent)
     }
@@ -87,7 +96,6 @@ class HomeViewModel
             _events.emit(events)
         }
     }
-
 
 
 }

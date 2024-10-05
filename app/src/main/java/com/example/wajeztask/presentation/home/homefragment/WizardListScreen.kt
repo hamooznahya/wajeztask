@@ -1,41 +1,41 @@
 package com.example.wajeztask.presentation.home.homefragment
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.wajeztask.domain.model.Wizards
-import com.example.wajeztask.presentation.home.HomePageEvents
-import com.example.wajeztask.utils.ResponseState
+import com.example.wajeztask.domain.model.Wizard
 
 @Composable
 fun WizardListScreen(
-    viewModel: HomeViewModel,
     actions: (HomePageEvents) -> Unit,
     state: HomeScreenState,
 ) {
-    val wizardsState by viewModel.listResult.collectAsState()
-    val savedItemsState by viewModel.savedItems.collectAsState(initial = emptyList())
 
-    if (state.online) viewModel.getWizardsList("", "") else viewModel.getCacheList()
 
-    when {
-        state.online && wizardsState is ResponseState.Loading -> {
-            LoadingIndicator()
-        }
-        state.online && wizardsState is ResponseState.Success -> {
-            WizardList((wizardsState as ResponseState.Success<List<Wizards>>).item, actions)
-        }
-        state.online && wizardsState is ResponseState.Failure -> {
-            ErrorMessage((wizardsState as ResponseState.Failure).error.errorMessage)
-        }
-        else -> {
-            WizardList(savedItemsState, actions)
-        }
+    if(state.listOfWizard.isNotEmpty()){
+        WizardList(state.listOfWizard,actions)
+    }
+    if(state.isLoading){
+        LoadingIndicator()
+    }
+    if (state.errorMsg!=null){
+        ErrorMessage(state.errorMsg)
     }
 }
 
@@ -51,11 +51,12 @@ fun LoadingIndicator() {
 
 @Composable
 fun ErrorMessage(message: String) {
-    Text(text = message)
+    val context = LocalContext.current
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 @Composable
-fun WizardList(wizards: List<Wizards>, actions: (HomePageEvents) -> Unit) {
+fun WizardList(wizards: List<Wizard>, actions: (HomePageEvents) -> Unit) {
     LazyColumn {
         items(items = wizards) { wizard ->
             WizardItem(wizard) {
@@ -66,7 +67,7 @@ fun WizardList(wizards: List<Wizards>, actions: (HomePageEvents) -> Unit) {
 }
 
 @Composable
-fun WizardItem(wizard: Wizards, onClick: () -> Unit) {
+fun WizardItem(wizard: Wizard, onClick: () -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier
@@ -76,7 +77,7 @@ fun WizardItem(wizard: Wizards, onClick: () -> Unit) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "first Name: ${wizard.firstName.orEmpty()}", style = MaterialTheme.typography.bodyMedium)
             Text(text = "last Name: ${wizard.lastName.orEmpty()}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "id: ${wizard.id.orEmpty()}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "id: ${wizard.id}", style = MaterialTheme.typography.bodySmall)
         }
     }
 }

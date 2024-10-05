@@ -10,6 +10,7 @@ import javax.inject.Inject
 class RemoteDataSourceImpl @Inject constructor(
     private val apiEndpoints: APIEndpoints
 ) : RemoteDataSource {
+
     override suspend fun getWizardsList(
         firstName: String,
         lastName: String

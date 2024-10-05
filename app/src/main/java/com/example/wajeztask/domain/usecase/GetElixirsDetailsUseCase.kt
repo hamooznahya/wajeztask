@@ -1,7 +1,6 @@
 package com.example.wajeztask.domain.usecase
 
 import com.example.wajeztask.domain.model.Elixirs
-import com.example.wajeztask.domain.model.Wizards
 import com.example.wajeztask.domain.repository.WizardsRepository
 import com.example.wajeztask.utils.ResponseState
 

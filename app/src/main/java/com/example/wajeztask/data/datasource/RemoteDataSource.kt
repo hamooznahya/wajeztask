@@ -2,7 +2,6 @@ package com.example.wajeztask.data.datasource
 
 import com.example.wajeztask.data.dto.ElixirsResponse
 import com.example.wajeztask.data.dto.WizardsResponse
-import com.example.wajeztask.domain.model.Wizards
 
 
 interface RemoteDataSource {

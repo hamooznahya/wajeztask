@@ -15,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.findNavController
 import com.example.wajeztask.R
-import com.example.wajeztask.presentation.home.HomePageEvents
 import com.example.wajeztask.utils.observeAsEvent
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,11 +50,7 @@ class HomeFragment : Fragment() {
                             }
                         }
 
-
-                            WizardListScreen(viewModel, viewModel::onAction,state.value)
-
-
-
+                            WizardListScreen(viewModel::onAction,state.value)
                     }
                 }
             }
